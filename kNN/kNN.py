@@ -7,6 +7,17 @@ from matplotlib import colors
 class kNN_classifier:
 
     def __init__(self, train_data):
+        '''
+        Initializes a parametric learning classifer class variable in Python
+        Arguments:
+        ----------
+        training_df: pandas dataframe
+            - Training data for the class
+
+        Returns:
+        --------
+        Trains the class on the training data and returns the class
+        '''
 
         self.train = train_data
 
@@ -22,6 +33,27 @@ class kNN_classifier:
         self.overall_acc_stats = {} # Initialize dictionary to keep up with accuracies
 
     def classify(self, testing_data, k, show_statistics = True, df_provided = False, progress_bar = False):
+        '''
+        Arguments:
+        ----------
+        testing_data: string or pandas dataframe
+            - If testing_data is a string, will call read_csv to turn that data into pandas df
+            - If a dataframe, simply copies it to use in the function
+            - If testing_data is a dataframe, df_provided must be True
+        k: int
+            - Number of k-Nearest Neighbors to consider when classifying testing sample
+        show_statistics: bool, optional
+            - If true, prints the statistics for the classification at the end of the routine
+        df_provided: bool, optional
+            - Must be true if testing_data is a pandas dataframe (not a string)
+        progress_bar: bool, optional
+            - If true, prints a message to indicate the progress of the classification routine
+
+        Returns:
+        --------
+        No explicit return value
+        Stores the predictions into the class (self.predictions)
+        '''
 
         start_time = time.time() # Start the clock
 
@@ -82,6 +114,21 @@ class kNN_classifier:
             print("") # Need newline
 
     def accuracy_stats(self, test_data, k, save_overall = True):
+        '''
+        Prints the overall accuracy and classwise accuracy after a prediction procedure has finished
+        Arguments:
+        ----------
+        test_data: pandas dataframe
+            - Dataframe containing the test data
+        k: int
+            - k parameter being used on the classification routine
+        save_overall: bool
+            - If true, saves the overall accuracy in the class in a dict (keyed on k value)
+
+        Returns:
+        --------
+        No explicit return value, only prints the stats to the console
+        '''
         # Need:
         #   1. overall classification accuracy
         #   2. classwise accuracy - all classes
@@ -117,10 +164,15 @@ class kNN_classifier:
             print("Classwise accuracy for \"{cl}\" class: {acc:.5f}"\
                     .format(cl = self.labels[i], acc = class_wise_accuracy[i]))
 
-        if (save_overall):
+        if (save_overall): # Save overall accuracy to class
             self.overall_acc_stats[k] = overall_acc 
 
     def plot_overall_acc(self):
+        '''
+        Plots the overall accuracy for given k values
+        No arguments
+        No explicit return, only shows the plot
+        '''
         x = self.overall_acc_stats.keys()
         y = self.overall_acc_stats.values()
 
@@ -131,12 +183,19 @@ class kNN_classifier:
         plt.title("Classification Accuracy vs. k")
         plt.show()
 
-    def plot_boundaries(self):
-        # Plots the decision boundary for kNN
-        # Note: only for use in synth dataset
-        # Hardcoded to work with only synth dataset
+    def plot_boundaries(self, k = 13, mesh_resolution = 0.03):
+        '''
+        Plots the decision boundary for kNN
+            - Note: only for use in synth dataset
+            - Hardcoded to work with only synth dataset
 
-        #point_colors = colors.ListedColormap(["red", "blue"])
+        Arguments:
+        ----------
+        k: int
+            - k parameter to train data on
+        mesh_resolution: float
+            - Resolution to use when computing mesh values
+        '''
         area_colors  = colors.ListedColormap(["salmon", "lightskyblue"])
 
         labeled_lists = [ [], [] ] 
@@ -160,9 +219,6 @@ class kNN_classifier:
         min_y = self.train.iloc[:, 1].min() - 1
         max_y = self.train.iloc[:, 1].max() + 1
 
-        # There will be a 0.03 resolution in our mesh
-        mesh_resolution = 0.03
-
         xlist = np.arange(min_x, max_x, mesh_resolution)
         ylist = np.arange(min_y, max_y, mesh_resolution)
 
@@ -174,7 +230,7 @@ class kNN_classifier:
         mesh_data = pd.DataFrame(dict_data)
 
         # Classify each of the points:
-        self.classify(testing_data = mesh_data, k = 13, show_statistics = False, \
+        self.classify(testing_data = mesh_data, k = k, show_statistics = False, \
                         df_provided = True, progress_bar = True)
         preds = np.array(self.predictions)
 
@@ -191,12 +247,15 @@ class kNN_classifier:
 
         plt.xlabel("x")
         plt.ylabel('y')
-        plt.title("kNN (k = 13) Decision Boundary on Synth Dataset")
+        plt.title("kNN (k = {}) Decision Boundary on Synth Dataset".format(int(k)))
         
         plt.show()
         
 
 def euclidean_dist(x_p, x_i):
+    '''
+    Computes euclidean distance given two vectors (x_p and x_i)
+    '''
     # Get the list of norms for vector each other one
     x_p = np.array(x_p)
     x_i = np.array(x_i)
