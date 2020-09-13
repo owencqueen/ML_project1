@@ -1,9 +1,29 @@
 import pandas as pd
 from matplotlib import pyplot as plt
 
-# Generates scatterplot for synthetic data
-def scatterplot_for_synth(type_data, show, use_pd_df = False):
-    
+
+def scatterplot_for_synth(type_data, show = True, use_pd_df = False):
+    '''
+    Generates scatterplot for synthetic data
+
+    Arguments:
+    ----------
+    type_data: string or pandas dataframe
+        - Options: "train", "test"
+        - Specifies which data to plot
+        - If it's a pandas dataframe already, use_pd_df must be True
+    show: bool, optional
+        - If true, shows the ploit
+        - If false, does not show the plot but the plt object is saved
+            in the local environment
+    use_pd_df: bool, optional
+        - If true, type_data is a pandas dataframe
+
+    Returns:
+    --------
+    No explicit return, but the scatterplot is output if show == True
+    '''
+
     if (use_pd_df):
         synth_df = type_data
     else:

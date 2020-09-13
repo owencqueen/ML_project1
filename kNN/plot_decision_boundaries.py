@@ -7,4 +7,4 @@ train = pd.read_csv("../data/" + dataset + "_train.csv")
 
 model = kNN_classifier(train)
 
-model.plot_boundaries()
+model.plot_boundaries(k = 13, mesh_resolution = 0.03)

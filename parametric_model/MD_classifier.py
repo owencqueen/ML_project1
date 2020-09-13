@@ -11,7 +11,15 @@ class classifier:
 
     def __init__(self, training_df):
         '''
-        
+        Initializes a parametric learning classifer class variable in Python
+        Arguments:
+        ----------
+        training_df: pandas dataframe
+            - Training data for the class
+
+        Returns:
+        --------
+        Trains the class on the training data and returns the class
         '''
         self.train = training_df
 
@@ -57,29 +65,69 @@ class classifier:
                 for col in range(0, len(current_matrix[row])):
                     feature_wise_sums[col] += current_matrix[row][col]
 
+            # Get averages for each of the classes
             feature_wise_sums = [(i / len(current_matrix)) for i in feature_wise_sums]
 
             self.mu.append(np.array(feature_wise_sums)) # Append feature_wise avg's for this class to list of mu_i lists
 
     def calc_variance(self):
+        '''
+        Calculates the variance for the class
+        Arguments:
+        ----------
+        No arguments, just calculates based off data stored after __init__ is called
+        '''
         return np.var(self.train.iloc[:,0])
 
     def calc_cov(self, label_ind):
+        '''
+        Calculates the covariance matrix for the data with a given label
+
+        Arguments:
+        ----------
+        label_ind: int
+            - Index of label as it's stored in the class
+
+        Returns:
+        --------
+        covariance matrix: <number of labels> x <number of labels> np array
+            - Covariance matrix of the data with that given label
+            - Calculted using numpy's covariance matrix function
+        '''
         return np.cov(np.transpose(self.class_data[label_ind]))
 
     def classify(self, test_data, discriminant_type = "euclidean", prior_probs = [0, 0],
                 show_statistics = True, plot_predictions = False):
         '''
+        Arguments:
+        ----------
+        test_data: string
+            - String refering to dataframe where the testing data is located
+            - Must be in ../data directory (but don't include "../data" prefix)
         discriminant_type: string
             - Options:
                 1. "euclidean"
                 2. "mahalanobis"
                 3. "quadratic"
+        prior_probs: list of floats
+            - List corresponding to the prior probability to use for each class
+                in the classification problem
+            - Must be same length as number of classes
+        show_statistics: bool
+            - If true, prints the statistics for the classification at the end of the routine
+        plot_predictions: bool
+            - If true, plots each point in the testing sample (color coded for predicted class) 
+                along with the decision boundary made by the discriminant function.
+
+        Returns:
+        --------
+        No explicit return value
+        Stores the predictions into the class (self.predictions)
         '''
 
         start_time = time.time()
 
-        test = pd.read_csv('data/' + test_data) # Read in our test data
+        test = pd.read_csv('../data/' + test_data) # Read in our test data
 
         prob_eq = True
 
@@ -112,7 +160,6 @@ class classifier:
                 cov_mat_i = self.calc_cov(label_ind = i)
                 cov_mat_list.append(cov_mat_i)
 
-
         # Note: don't need to calculate anything initially for quadratic: all calcs done during iteration
 
         # Iterate over dataframe:
@@ -137,9 +184,9 @@ class classifier:
 
                 val_per_class.append(curr_val)
 
-            highest_p = max(val_per_class)
+            highest_p = max(val_per_class) # Get highest probability
 
-            prediction = self.labels_unique[val_per_class.index(highest_p)]
+            prediction = self.labels_unique[val_per_class.index(highest_p)] # Set prediction based on probability
 
             self.predictions.append(prediction) # Adds prediction
 
@@ -161,6 +208,20 @@ class classifier:
 
 
     def accuracy_stats(self, dis_type, test_data):
+        ''' 
+        Prints the overall accuracy and classwise accuracy after a prediction procedure has finished
+        Arguments:
+        ----------
+        dis_type: string
+            - Specifies the type of discriminant function being used for the classfication
+            - Options: "euclidean", "mahalanobis", and "quadratic"
+        test_data: pandas dataframe
+            - Dataframe containing the test data
+
+        Returns:
+        --------
+        No explicit return value, only prints the stats to the console
+        '''
         # Need:
         #   1. overall classification accuracy
         #   2. classwise accuracy - all classes
@@ -215,7 +276,26 @@ class classifier:
                     .format(cl = self.labels_unique[i], acc = class_wise_accuracy[i]))
 
     def plot_decision_boundaries(self, show = True, dis_fn = "all", data_test = False, use_dataset = False):
+        '''
+        Plots the decision boundaries alongside the training data for given discriminant functions
 
+        Arguments:
+        ----------
+        show: bool, optional
+            - If true, shows the plot
+        dis_fn: string, optional
+            - Specifies which discriminant function to plot
+            - If "all", then it plots all of the discriminant functions alongside the training data
+        data_test: False or pandas dataframe, optional
+            - If False, plots the training data
+            - If a pandas dataframe, plots whatever data is given in scatterplot
+        use_dataset: bool, optional
+            - If true, this means that "data_test" is a dataframe and needs to be used to plot points
+
+        Returns:    
+        --------
+        No explicit return, just displays the plot for the boundaries (if show == True)
+        '''
         # First, plot the points
         if (use_dataset == False):
             plot_points(type_data = "test", show = False)
@@ -266,9 +346,21 @@ class classifier:
             plt.show()
 
     def plot_class_0_acc(self, prior_prob_vals):
-        # Plot class 0 accuracy for given different prior probabilities
+        '''
+        Plot class 0 accuracy for given different prior probabilities
 
-        plt.plot(prior_prob_vals, self.class_0_acc_e, 'peachpuff', label = "E Fn")
+        Arguments:
+        ----------
+        prior_prob_vals: list
+            - List corresponding to prior probabilities that were used to generate class 0
+                accuracies currently stored in the class
+
+        Returns:
+        --------
+        No explicit return, but it does display the plot generated
+        '''
+
+        plt.plot(prior_prob_vals, self.class_0_acc_e, 'r', label = "E Fn")
         plt.plot(prior_prob_vals, self.class_0_acc_m, 'g', label = "M Fn")
         plt.plot(prior_prob_vals, self.class_0_acc_q, 'y', label = "Q Fn")
 
