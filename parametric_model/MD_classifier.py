@@ -122,6 +122,7 @@ class classifier:
         a_vals: list of floats
             - List of a parameters to use in calculation of multimodel Gaussian distributions
             - Will only be used if discriminant_type == "bimodal"
+            - See ec2_fit_distribution.py and report for more explanation
 
         Returns:
         --------
