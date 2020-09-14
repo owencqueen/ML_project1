@@ -13,6 +13,8 @@ The files for this portion are contained in the parametric_model directory.
 ### Part A
 The code for this portion is in the parametric_model/scatterplot_data.py file. All you need to do to generate the scatterplot (shown below) is to run this script.
 
+![Scatterplot](https://github.com/owencqueen/ML_project1/blob/master/images/synth_scatterplot.png)
+
 ### Part B
 For this part, run the parametric_model/run_classifier.py script. This will also output the decision boundaries (for Section 1, part D) after printing the accuracy statistics for each discriminant function on the synth dataset. You must then close out of the decision boundary plot, and then the script will run the classifier on the Pima dataset and print the accuracy statistics.
 
@@ -21,6 +23,8 @@ No code is associated with this part.
 
 ### Part D
 This plot (shown below) will be output to the screen when running the parametric_model/run_classifier.py script.
+
+![Parametric boundaries](https://github.com/owencqueen/ML_project1/blob/master/images/decision_bds.png)
 
 ### Part E
 On the report, I generated 4 separate plots for this part. To generate the plots shown to the right on each section, you will just run the script parametric_model/run_prior_prob.py. In order to generate the plots shown to the left, this will require changing the code in parametric_model/MD_classifier.py. You will have to go to this file and uncomment line 247 while commenting line 248. Then, the plots to the left should show up after running the parametric_model/run_prior_prob.py script.
@@ -40,11 +44,15 @@ There was no code associated with this part of the project.
 ### Part D
 The plot that I produced in the report (shown below) can be reproduced by running the kNN/plot_decision_boundaries.py script. If you want to change the k value associated with the plot, simply edit the value in the plot_boundaries function call within the script.
 
+![kNN decision boundary](https://github.com/owencqueen/ML_project1/blob/master/images/knn_decision_bd_finer.png)
+
 ## Extra Credit 1
 The portion of the kNN class that implements this extra credit is on line 107 where we multiply the number of votes by our prior probabilities in order to weight them. The instrcutions for generating the plots are shown below:
 
 ### Generating Bar Plots
 To genereate the bar plots shown in the report (like the one below), run the script kNN/run_ec_part1.py. 
+
+![extra credit](https://github.com/owencqueen/ML_project1/blob/master/images/inverse_freq_vs_k_plots.png)
 
 ### Generating plots for Accuracy vs. Prior Probability for Varying k Values 
 In order to generate the plots seen later in this extra credit section, run the script kNN/run_ec1_part2.py.The values that I have in there currently are associated with the numbers on the report. Feel free to modify these values, such as prior probabilities to try, in order to try to mimic my results. 
