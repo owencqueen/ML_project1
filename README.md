@@ -1,4 +1,4 @@
-# Project 1
+# Project 1 - Parametric and Nonparametric Learning
 Project 1 for COSC 522 - Machine Learning - at UTK
 
 This README will describe how to run the code associated with this project. Please see the report for an in-depth analysis of the results of these models.
@@ -63,8 +63,12 @@ The code that implements the methods described in the report for this extra cred
 ### Generating Cluster Separations
 To generate the cluster separations (as shown below), run the parametric_model/ec2_graph_splits.py script.
 
+![Split](https://github.com/owencqueen/ML_project1/blob/master/images/ec2_boundaries.png)
+
 ### Generating the Contour Plots
-To plot the contours of the two bimodal Gaussian distributions, you can run the script named parametric_model/ec2_fit_distributions.py. This script by default generates the plot for the class 0 distribution. If you want to change this to be class 1, go to the bottom of the script and change the "class_number" argument in the plot_contours function to 1. 
+To plot the contours of the two bimodal Gaussian distributions (as shown below for class 0), you can run the script named parametric_model/ec2_fit_distributions.py. This script by default generates the plot for the class 0 distribution. If you want to change this to be class 1, go to the bottom of the script and change the "class_number" argument in the plot_contours function to 1. 
+
+![class 0 contour](https://github.com/owencqueen/ML_project1/blob/master/images/contours_class0.png)
 
 ### Running the Classifier with Bimodal Discriminant
 In order to run the classifier with this generated bimodal discriminant function, you can run the script parametric_model/run_ec2_predictions.py. This will output the statistics for the classifier ran with a values of 0.5 for both classes.
