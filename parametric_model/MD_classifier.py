@@ -6,6 +6,7 @@ from matplotlib import pyplot as plt
 from scatterplot_data import scatterplot_for_synth as plot_points
 from discriminant_fns import euclidean, mahalanobis, quadratic
 from discriminant_fns import euclidean_decision_bd, mahalanobis_decision_bd, quadratic_decision_bd
+from ec2_fit_distributions import multimodal_Gaussian_functions
 
 class classifier:
 
@@ -97,7 +98,7 @@ class classifier:
         return np.cov(np.transpose(self.class_data[label_ind]))
 
     def classify(self, test_data, discriminant_type = "euclidean", prior_probs = [0, 0],
-                show_statistics = True, plot_predictions = False):
+                show_statistics = True, plot_predictions = False, a_vals = [0.5, 0.5]):
         '''
         Arguments:
         ----------
@@ -118,6 +119,9 @@ class classifier:
         plot_predictions: bool
             - If true, plots each point in the testing sample (color coded for predicted class) 
                 along with the decision boundary made by the discriminant function.
+        a_vals: list of floats
+            - List of a parameters to use in calculation of multimodel Gaussian distributions
+            - Will only be used if discriminant_type == "bimodal"
 
         Returns:
         --------
@@ -160,37 +164,57 @@ class classifier:
                 cov_mat_i = self.calc_cov(label_ind = i)
                 cov_mat_list.append(cov_mat_i)
 
+        elif (discriminant_type == "bimodal"):
+            pdf_class0,pdf_class1 = multimodal_Gaussian_functions(a_vals[0], a_vals[1])
+
         # Note: don't need to calculate anything initially for quadratic: all calcs done during iteration
 
         # Iterate over dataframe:
         for i in range(0, test.shape[0]):
-                
-            val_per_class = []
 
             x = test.iloc[i,0:-1]
 
-            for i in range(0, len(self.labels_unique)):
+            if (discriminant_type != "bimodal"):
 
-                # Calculate discriminant based on user specification:
-                if (discriminant_type == "euclidean"):
-                    curr_val = euclidean(x, self.mu[i], var, prior_probs[i], prob_eq)
-                
-                elif (discriminant_type == "mahalanobis"):
-                    curr_val = mahalanobis(x, self.mu[i], cov_mat_0_inv, prior_probs[i], prob_eq)
+                val_per_class = []
 
-                elif (discriminant_type == "quadratic"):
-                    curr_val = quadratic(x, self.mu[i], cov_mat_list[i], prior_probs[i], prob_eq)
+                for i in range(0, len(self.labels_unique)):
 
-                val_per_class.append(curr_val)
+                    # Calculate discriminant based on user specification:
+                    if (discriminant_type == "euclidean"):
+                        curr_val = euclidean(x, self.mu[i], var, prior_probs[i], prob_eq)
+                    
+                    elif (discriminant_type == "mahalanobis"):
+                        curr_val = mahalanobis(x, self.mu[i], cov_mat_0_inv, prior_probs[i], prob_eq)
 
-            highest_p = max(val_per_class) # Get highest probability
+                    elif (discriminant_type == "quadratic"):
+                        curr_val = quadratic(x, self.mu[i], cov_mat_list[i], prior_probs[i], prob_eq)
 
-            prediction = self.labels_unique[val_per_class.index(highest_p)] # Set prediction based on probability
+                    val_per_class.append(curr_val)
+
+                highest_p = max(val_per_class) # Get highest probability
+
+                prediction = self.labels_unique[val_per_class.index(highest_p)] # Set prediction based on probability
+
+            elif (discriminant_type == "bimodal"):
+
+                if prob_eq:
+                    # This is if prior probabilities are equal
+                    val0 = pdf_class0(x)
+                    val1 = pdf_class1(x)
+                else:
+                    # This bit is hardcoded to only work with 
+                    val0 = pdf_class0(x) * prior_probs[0]
+                    val1 = pdf_class1(x) * prior_probs[1]
+
+                # Choose prediction with highest posterior probability
+                prediction = 0 if (val0 > val1) else 1
 
             self.predictions.append(prediction) # Adds prediction
 
+
         if (show_statistics):
-            self.accuracy_stats(discriminant_type, test) # Prints statistics for classification algorithm
+            overall_acc = self.accuracy_stats(discriminant_type, test) # Prints statistics for classification algorithm
             print("{} Runtime: {} seconds".format(discriminant_type, time.time() - start_time))
             print("") # Need newline
 
@@ -204,6 +228,9 @@ class classifier:
             df = pd.DataFrame(predicted_data, columns = ['x', 'y', 'label'])
 
             self.plot_decision_boundaries(show = True, dis_fn = discriminant_type, data_test = df, use_dataset = True)
+
+        if (show_statistics):
+            return overall_acc
 
 
     def accuracy_stats(self, dis_type, test_data):
@@ -219,7 +246,8 @@ class classifier:
 
         Returns:
         --------
-        No explicit return value, only prints the stats to the console
+        overall_acc: float
+            - Overall accuracy of the given classifer on our testing dataset
         '''
         # Need:
         #   1. overall classification accuracy
@@ -273,6 +301,8 @@ class classifier:
         for i in range(0, len(self.labels_unique)):
             print("Classwise accuracy for \"{cl}\" class: {acc:.5f}"\
                     .format(cl = self.labels_unique[i], acc = class_wise_accuracy[i]))
+
+        return overall_acc
 
     def plot_decision_boundaries(self, show = True, dis_fn = "all", data_test = False, use_dataset = False):
         '''
