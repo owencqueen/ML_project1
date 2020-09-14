@@ -127,7 +127,7 @@ class classifier:
 
         start_time = time.time()
 
-        test = pd.read_csv('../data/' + test_data) # Read in our test data
+        test = pd.read_csv('data/' + test_data) # Read in our test data
 
         prob_eq = True
 
@@ -179,7 +179,6 @@ class classifier:
                     curr_val = mahalanobis(x, self.mu[i], cov_mat_0_inv, prior_probs[i], prob_eq)
 
                 elif (discriminant_type == "quadratic"):
-                    #cov_mat_i = np.cov(np.transpose(self.class_data[i])) # Calculate covariance for our given class
                     curr_val = quadratic(x, self.mu[i], cov_mat_list[i], prior_probs[i], prob_eq)
 
                 val_per_class.append(curr_val)

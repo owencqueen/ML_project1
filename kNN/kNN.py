@@ -30,9 +30,11 @@ class kNN_classifier:
 
         self.num_samples = train_data.shape[0]
 
+        self.overall_acc_by_k = {}
+
         self.overall_acc_stats = {} # Initialize dictionary to keep up with accuracies
 
-    def classify(self, testing_data, k, show_statistics = True, df_provided = False, progress_bar = False):
+    def classify(self, testing_data, k, pp_weights = [1, 1], show_statistics = True, df_provided = False, progress_bar = False):
         '''
         Arguments:
         ----------
@@ -56,6 +58,10 @@ class kNN_classifier:
         '''
 
         start_time = time.time() # Start the clock
+
+        if (k not in self.overall_acc_by_k.keys()):
+            # Initialize key for this given list if it hasn't been done already
+            self.overall_acc_by_k[k] = []
 
         if (df_provided):
             test = testing_data
@@ -96,6 +102,9 @@ class kNN_classifier:
             # Take majority vote:
             for label in k_labels:
                 label_counts[self.labels.index(label)] += 1
+
+            # Implement weighting of the votes:
+            label_counts = [(label_counts[i] * pp_weights[i]) for i in self.labels]
 
             max_label_ind = label_counts.index(max(label_counts))
             #print(self.labels[max_label_ind])
@@ -152,7 +161,7 @@ class kNN_classifier:
                 # Add to class-wise accuracy
                 class_wise_correct[self.labels.index(predict)] += 1
 
-            class_wise_total[self.labels.index(predict)] += 1
+            class_wise_total[self.labels.index(true_labels[i])] += 1
 
         overall_acc = overall_correct / len(true_labels)
         class_wise_accuracy = [(class_wise_correct[i] / class_wise_total[i]) \
@@ -166,8 +175,9 @@ class kNN_classifier:
 
         if (save_overall): # Save overall accuracy to class
             self.overall_acc_stats[k] = overall_acc 
+            self.overall_acc_by_k[k].append(overall_acc)
 
-    def plot_overall_acc(self):
+    def plot_overall_acc(self, plot_pp = False, pp = [0, 0]):
         '''
         Plots the overall accuracy for given k values
         No arguments
@@ -176,12 +186,50 @@ class kNN_classifier:
         x = self.overall_acc_stats.keys()
         y = self.overall_acc_stats.values()
 
+        title = "Classification Accuracy vs. k"
+        if (plot_pp):
+            title += ":: P(0) ={}, P(1) ={}".format(pp[0], pp[1])
+
         plt.bar(x, y)
         plt.xlabel("k value")
         plt.ylabel("Overall Classification Accuracy")
         plt.ylim(0.5, 1)
-        plt.title("Classification Accuracy vs. k")
+        plt.title(title)
         plt.show()
+
+    def plot_overall_acc_w_varying(self, pp_varied):
+        '''
+        Used to plot the varying accuracies given the prior probabilities
+
+        Arguments:
+        ----------
+        pp_varied: list
+            - List of varying prior probability values used to train the model
+        
+        Returns:
+        --------
+        No explicit return, just displays the plot and prints the most accurate parameters
+        '''
+
+        max_acc = 0
+        max_acc_i = 0
+        max_acc_k = 0
+
+        for key in self.overall_acc_by_k.keys():
+            if (max(self.overall_acc_by_k[key]) > max_acc):
+                max_acc = max(self.overall_acc_by_k[key])
+                max_acc_i = self.overall_acc_by_k[key].index(max_acc)
+                max_acc_k = key
+
+            plt.plot(pp_varied, self.overall_acc_by_k[key], label = "k = {}".format(key))
+
+        plt.title("Overall accuracy for PP vs. k")
+        plt.xlabel("Prior Prob value for Class 0")
+        plt.ylabel("Overall Classification Accuracy")
+        plt.axvline(0.5, c='r', linestyle = '--', label = "Original Probability")
+        plt.legend()
+        plt.show()
+        print("Highest overall = {}: k = {} at P(0) = {:.5f}".format(max_acc, int(max_acc_k), pp_varied[max_acc_i]))
 
     def plot_boundaries(self, k = 13, mesh_resolution = 0.03):
         '''
