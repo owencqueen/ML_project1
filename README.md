@@ -27,7 +27,7 @@ This plot (shown below) will be output to the screen when running the parametric
 ![Parametric boundaries](https://github.com/owencqueen/ML_project1/blob/master/images/decision_bds.png)
 
 ### Part E
-On the report, I generated 4 separate plots for this part. To generate the plots shown to the right on each section, you will just run the script parametric_model/run_prior_prob.py. In order to generate the plots shown to the left, this will require changing the code in parametric_model/MD_classifier.py. You will have to go to this file and uncomment line 247 while commenting line 248. Then, the plots to the left should show up after running the parametric_model/run_prior_prob.py script.
+On the report, I generated 4 separate plots for this part. To generate the plots shown to the right on each section, you will just run the script parametric_model/run_prior_prob.py. In order to generate the plots shown to the left, this will require changing the code in parametric_model/MD_classifier.py. You will have to go to this file and uncomment line 276 while commenting line 275. Then, the plots to the left should show up after running the parametric_model/run_prior_prob.py script.
 
 ## Section 2
 All of the code for this section is contained in the kNN directory.
