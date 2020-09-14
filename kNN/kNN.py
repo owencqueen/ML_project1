@@ -44,6 +44,9 @@ class kNN_classifier:
             - If testing_data is a dataframe, df_provided must be True
         k: int
             - Number of k-Nearest Neighbors to consider when classifying testing sample
+        pp_weights: list of floats or dictionary with floats as values, optional
+            - Contains the prior probabilities for each class
+            - Preferably a dictionary with keyed on labels
         show_statistics: bool, optional
             - If true, prints the statistics for the classification at the end of the routine
         df_provided: bool, optional
@@ -180,7 +183,15 @@ class kNN_classifier:
     def plot_overall_acc(self, plot_pp = False, pp = [0, 0]):
         '''
         Plots the overall accuracy for given k values
-        No arguments
+        Arguments:
+        ----------
+        plot_pp: bool, optional
+            - Tells whether to include prior probability values in title or not
+        pp: list of floats or dictionary with floats as values, optional
+            - Contains the prior probabilities for each class
+            - Preferably a dictionary with keyed on labels
+            - Will be plotted on the output graph if plot_pp == True
+
         No explicit return, only shows the plot
         '''
         x = self.overall_acc_stats.keys()
@@ -243,6 +254,8 @@ class kNN_classifier:
             - k parameter to train data on
         mesh_resolution: float
             - Resolution to use when computing mesh values
+
+        No explicit return
         '''
         area_colors  = colors.ListedColormap(["salmon", "lightskyblue"])
 
