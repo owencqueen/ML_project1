@@ -56,3 +56,17 @@ To genereate the bar plots shown in the report (like the one below), run the scr
 
 ### Generating plots for Accuracy vs. Prior Probability for Varying k Values 
 In order to generate the plots seen later in this extra credit section, run the script kNN/run_ec1_part2.py.The values that I have in there currently are associated with the numbers on the report. Feel free to modify these values, such as prior probabilities to try, in order to try to mimic my results. 
+
+## Extra Credit 2
+The code that implements the methods described in the report for this extra credit assignment is all located in the parametric_model directory. Every file associated contains the substring "ec2" in the name of the file.
+
+### Generating Cluster Separations
+To generate the cluster separations (as shown below), run the parametric_model/ec2_graph_splits.py script.
+
+### Generating the Contour Plots
+To plot the contours of the two bimodal Gaussian distributions, you can run the script named parametric_model/ec2_fit_distributions.py. This script by default generates the plot for the class 0 distribution. If you want to change this to be class 1, go to the bottom of the script and change the "class_number" argument in the plot_contours function to 1. 
+
+### Running the Classifier with Bimodal Discriminant
+In order to run the classifier with this generated bimodal discriminant function, you can run the script parametric_model/run_ec2_predictions.py. This will output the statistics for the classifier ran with a values of 0.5 for both classes.
+
+### Finding the a Values with Maximum Accuracies
