@@ -28,9 +28,9 @@ def scatterplot_for_synth(type_data, show = True, use_pd_df = False):
         synth_df = type_data
     else:
         if (type_data == "train"):
-            synth_df = pd.read_csv("data/synth_train.csv")
+            synth_df = pd.read_csv("../data/synth_train.csv")
         elif (type_data == "test"):
-            synth_df = pd.read_csv("data/synth_test.csv")
+            synth_df = pd.read_csv("../data/synth_test.csv")
 
     groups = synth_df.groupby("label")
     for name, group in groups:

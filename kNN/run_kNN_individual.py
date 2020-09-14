@@ -2,14 +2,14 @@ import pandas as pd
 from kNN import kNN_classifier
 
 # Set dataset variable equal to "synth" in order to run synth dataset
-dataset = "pima"
+dataset = "synth"
 
 train = pd.read_csv("../data/" + dataset + "_train.csv")
 
 model = kNN_classifier(train)
 
-# Run the classification procedure on each
-for i in range(1, 15):
-    model.classify(dataset + "_test.csv", k = i)
+# For Synth dataset, run the command below:
+model.classify(dataset + "_test.csv", k = 13)
 
-model.plot_overall_acc()
+#For Pima dataset, run the command below:
+#model.classify(dataset + "_test.csv", k = 14)

@@ -127,7 +127,7 @@ class classifier:
 
         start_time = time.time()
 
-        test = pd.read_csv('data/' + test_data) # Read in our test data
+        test = pd.read_csv('../data/' + test_data) # Read in our test data
 
         prob_eq = True
 
