@@ -6,6 +6,8 @@ Owen Queen
 This README will describe how to run the code associated with this project. Please see the report for an in-depth analysis of the results of these models.
 The project writeup can be found at [this link](http://web.eecs.utk.edu/~hqi/cosc522/project/proj1.htm). The entire documentation for the code can be found in the docstrings within the classes and functions that I have written.
 
+Please see the report [here](https://github.com/owencqueen/ML_project1/blob/master/oqueen_Project1_report.pdf).
+
 ### Cleaning data
 The script that I used to clean my data for this project is in parse_data.py. This script is just for reference because the cleaned data has already been included in the data directory.
 
