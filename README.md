@@ -1,6 +1,8 @@
 # Project 1 - Parametric and Nonparametric Learning
 Project 1 for COSC 522 - Machine Learning - at UTK
 
+Owen Queen
+
 This README will describe how to run the code associated with this project. Please see the report for an in-depth analysis of the results of these models.
 The project writeup can be found at [this link](http://web.eecs.utk.edu/~hqi/cosc522/project/proj1.htm). The entire documentation for the code can be found in the docstrings within the classes and functions that I have written.
 
