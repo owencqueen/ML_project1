@@ -74,3 +74,4 @@ To plot the contours of the two bimodal Gaussian distributions (as shown below f
 In order to run the classifier with this generated bimodal discriminant function, you can run the script parametric_model/run_ec2_predictions.py. This will output the statistics for the classifier ran with a values of 0.5 for both classes.
 
 ### Finding the a Values with Maximum Accuracies
+My procedure to explore different a values and their effect on accuracy in the model can be found in the parametric_learning/run_e2_varying.py script. This will also generate the plot shown at the end of the report, with the dots that vary in size depending on the accuracy achieved for those given variables.
